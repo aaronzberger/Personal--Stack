@@ -3,25 +3,24 @@
 #include <vector>
 #include "Node.h"
 
-class Stack
-{
+class Stack {
 private:
-    Node *arr;
-    int currentTop;
+    Node **arr;
+    int topIndex;
     int capacity;
     void doubleCapacity();
 public:
     Stack();
     Stack(Node &n, int size = 10);
+    ~Stack();
     
     void push(Node &n);
     void pop();
     
     void displayStack();
-    int getCurrentTop() { return currentTop; }
+    
+    int getTopIndex() { return topIndex; }
     int getCapacity() { return capacity; }
-    ~Stack();
-
 };
 
 #endif // _STACK_H_

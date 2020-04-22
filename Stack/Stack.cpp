@@ -2,50 +2,49 @@
 #include <iostream>
 
 Stack::Stack() 
-    : arr{nullptr}, currentTop{-1}, capacity{10} {
-    arr = new Node[10];
+    : arr{nullptr}, topIndex{-1}, capacity{10} {
+    arr = new Node*[capacity];
 }
 
 Stack::Stack(Node &n, int size) 
-    :arr{nullptr}, currentTop{0}, capacity{size} {
-    arr = new Node[size];
-    arr[0] = n;
+    : arr{nullptr}, topIndex{0}, capacity{size} {
+    arr = new Node*[capacity];
+    Node *newNode = new Node(n);
+    arr[0] = newNode;
 }
 
 void Stack::push(Node &n) {
-    if(currentTop == (capacity - 1)) {
+    if(topIndex == (capacity - 1))
         doubleCapacity();
-    }
-    currentTop++;
-    arr[currentTop] = n;
+    topIndex++;
+    Node *newNode = new Node(n);
+    arr[topIndex] = newNode;
 }
 
 void Stack::pop() {
-    if(currentTop == -1) {
-        std::cout << "No elements in the stack" << std::endl;
-    } else {
-        currentTop--;
-    }
+    if(topIndex == -1)
+        throw std::runtime_error("Attempted to pop the stack when there are no elements currently in it. In pop() method");
+    delete arr[topIndex];
+    topIndex--;
 }
 
 void Stack::displayStack() {
-    for(int i{currentTop}; i >= 0; i--) {
-        std::cout << (arr[i]).s << " is " << (arr[i]).a << std::endl;
-    }
+    for(int i{topIndex}; i >= 0; i--)
+        std::cout << (arr[i])->s << " is " << (arr[i])->a << std::endl;
     std::cout << std::endl;
 }
 
 void Stack::doubleCapacity() {
-    Node *temp = new Node[capacity * 2];
-    for(int i{0}; i <= currentTop; i++) {
-        *(temp + i) = *(arr + i);
-    }
-    delete [] arr;
-    arr = temp;
-    delete [] temp;
     capacity *= 2;
+    Node **newArr = new Node*[capacity];
+    for(int i{0}; i <= topIndex; i++)
+        newArr[i] = arr[i];
+    delete [] arr;
+    arr = newArr;
 }
 
 Stack::~Stack() {
+    for(int i{0}; i <= topIndex; i++)
+        delete arr[i];
     delete [] arr;
 }
